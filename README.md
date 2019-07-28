@@ -1,4 +1,4 @@
-# cookiecutter-daburu-rest
+# cookiecutter-restful-elastalk
 
 This is a [cookiecutter](https://cookiecutter.readthedocs.io/en/latest/) template designed to help you get started with your [Flask-RESTPlus](https://flask-restplus.readthedocs.io/en/stable/) API project.
 
@@ -6,9 +6,10 @@ This is a [cookiecutter](https://cookiecutter.readthedocs.io/en/latest/) templat
 
 The project you create from this template has a few features to be aware of including:
 
-* A [Flask-RESTPlus](https://flask-restplus.readthedocs.io/en/stable/) project framework.
-* [Pytest](https://docs.pytest.org/en/latest/) unit tests
-* A documentation project based on [Sphinx](http://www.sphinx-doc.org/en/master/usage/quickstart.html).
+* a [Flask-RESTPlus](https://flask-restplus.readthedocs.io/en/stable/) project framework.
+* the [elastalk](https://pypi.org/project/elastalk/) library which has some utilities you can use to talk to [Elasticsearch](https://www.elastic.co/products/elastic-stack)
+* [pytest](https://docs.pytest.org/en/latest/) unit tests
+* a documentation project based on [Sphinx](http://www.sphinx-doc.org/en/master/usage/quickstart.html)
 
 ## Getting Started
 
@@ -26,7 +27,7 @@ pip install cookiecutter
 You can build a project directly from the github repository.
 
 ```bash
-cookiecutter https://github.com/Geo-Comm/cookiecutter-daburu-restful
+cookiecutter https://github.com/Geo-Comm/cookiecutter-restful-elastalk
 ```
 
 #### Run the `make` Targets
