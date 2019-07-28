@@ -52,6 +52,7 @@ setup(
         # 'numpy>=1.13.3,<2',
         # 'measurement>=1.8.0,<2'
         'click>=7,<8',
+        'elastalk>=6.5.2.2,<6.6',
         'flask-restplus>=0.12.1,<1',
         'logpp>=0.0.8,<0.1',
         'gunicorn>=19.9.0,<20'
