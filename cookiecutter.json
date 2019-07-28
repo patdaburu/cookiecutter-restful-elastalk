@@ -1,0 +1,19 @@
+{
+	"project_slug": "restful-api",
+	"package_name": "{{ cookiecutter.project_slug|lower|replace(' ', '_')|replace('-', '_')|replace('.', '') }}",
+	"cli_name": "{{cookiecutter.package_name}}",
+	"api_root": "/api",
+	"project_version": "0.0.1",
+	"project_description": "This is my RESTful API Project!",
+	"python_version": ["3.6", "3.7", "3.8"],
+	"author_name": "my_name",
+	"author_email": "my_email",
+	"license": [
+    "MIT",
+    "BSD",
+    "GPLv3",
+    "Apache Software License 2.0",
+    "None"
+  ],
+  "github_user": "my_github_user"
+}
