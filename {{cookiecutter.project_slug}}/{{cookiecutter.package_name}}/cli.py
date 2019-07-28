@@ -137,17 +137,17 @@ def version():
 
 
 @cli.command()
-@click.option('--es-hosts', multiple=True,
-              help='Identify Elasticsearch hosts.')
 @click.option('--root', '-r', type=click.Path(exists=True),
               help='Provide the path to the seed data root directory.')
 @click.option('--force', '-f', is_flag=True,
               help='Replace indices with seed data.')
+@click.option('--yes', '-y', is_flag=True,
+              help="Answer yes/no prompts with 'yes'.")
 @pass_info
 def seed(info: Info,
-         es_hosts: Iterable[str],
          root: str,
-         force: bool):
+         force: bool,
+         yes: bool):
     """
     Populate an Elasticsearch database with application seed data.
     """
@@ -161,7 +161,7 @@ def seed(info: Info,
         click.echo(click.style(f"{str(_root)} is not a directory."))
         sys.exit(1)
     # Double check that the user really meant the "force" option.
-    if force:
+    if force and not yes:
         click.confirm(
             'Are you sure you want to overwrite existing data?',
             abort=True)
