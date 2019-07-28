@@ -1,0 +1,11 @@
+{
+  "mappings": {
+    "language": {
+      "properties": {
+        "name": {
+          "type": "text"
+        }
+      }
+    }
+  }
+}

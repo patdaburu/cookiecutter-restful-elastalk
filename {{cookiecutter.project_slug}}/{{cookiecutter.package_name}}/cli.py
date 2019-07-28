@@ -21,6 +21,7 @@ import sys
 import traceback
 from typing import Iterable
 import click
+import elastalk
 from .__init__ import __version__
 
 LOGGING_LEVELS = {
@@ -133,3 +134,45 @@ def version():
     Get the version.
     """
     click.echo(click.style(f'{__version__}', bold=True))
+
+
+@cli.command()
+@click.option('--es-hosts', multiple=True,
+              help='Identify Elasticsearch hosts.')
+@click.option('--root', '-r', type=click.Path(exists=True),
+              help='Provide the path to the seed data root directory.')
+@click.option('--force', '-f', is_flag=True,
+              help='Replace indices with seed data.')
+@pass_info
+def seed(info: Info,
+         es_hosts: Iterable[str],
+         root: str,
+         force: bool):
+    """
+    Populate an Elasticsearch database with application seed data.
+    """
+    # Resolve the path to the seed data directory.
+    _root = (
+        Path(root).resolve() if root
+        else Path(__file__).resolve().parent / 'seed'
+    )
+    # Make sure the specified root directory exists.
+    if not _root.is_dir():
+        click.echo(click.style(f"{str(_root)} is not a directory."))
+        sys.exit(1)
+    # Double check that the user really meant the "force" option.
+    if force:
+        click.confirm(
+            'Are you sure you want to overwrite existing data?',
+            abort=True)
+    # Do it!
+    try:
+        elastalk.seed(
+            root=_root,
+            force=force
+        )
+        click.echo(click.style('Done.', fg='green'))
+    except Exception as ex:  # pylint: disable=broad-except
+        if info.verbose > 0:
+            traceback.print_exc()
+        click.echo(click.style(str(ex), fg='red'))
