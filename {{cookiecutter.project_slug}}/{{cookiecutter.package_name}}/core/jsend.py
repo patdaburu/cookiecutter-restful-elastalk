@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-.. currentmodule:: {{cookiecutter.package_name}}.core.utils.responses
+.. currentmodule:: {{cookiecutter.package_name}}.core.jsend
 .. moduleauthor:: {{cookiecutter.author_name}} <{{cookiecutter.author_email}}>
 
 This module contains helper functions that help you model your API responses
@@ -42,7 +42,7 @@ class JSendStatus(Enum):
 
 def response(
         status: JSendStatus,
-        message: str,
+        message: str = None,
         data: Dict = None,
         code: int = None):
     """

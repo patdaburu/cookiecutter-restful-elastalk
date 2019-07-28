@@ -1,0 +1,5 @@
+[blobs]
+excluded = []
+
+[indexes.cats]
+mappings = "languages/mappings.json"
