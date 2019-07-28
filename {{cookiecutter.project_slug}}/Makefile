@@ -34,6 +34,9 @@ lint:
 test: lint
 	py.test --cov-report term --cov=$(PROJ_SLUG) tests/
 
+quicktest:
+	py.test --cov-report term --cov=$(PROJ_SLUG) tests/
+
 coverage: lint
 	py.test --cov-report html --cov=$(PROJ_SLUG) tests/
 
