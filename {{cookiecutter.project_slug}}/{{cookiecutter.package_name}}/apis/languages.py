@@ -75,122 +75,65 @@ class LanguageResource(Resource, ElastalkMixin):
         )
 
 
-# class Language:
-#     def __init__(self, language, framework):
-#         self.language = language
-#         self.framework = framework
-#
-#     def __repr__(self):
-#         return '{} is the language, {} is the framework'.format(self.language, self.framework)
-#
-#
-# class LanguageSchema(Schema):  # <-- the marshmallow object
-#     language = mfields.String()
-#     framework = mfields.String()
-#
-#     @post_load
-#     def create_language(self, data):
-#         return Language(**data)
-#
-#
-# a_language = api.model(  # <-- the restplus object (for swagger docs)
-#     'Language', {
-#         'language': ffields.String('The Language'),
-#         'framework': ffields.String('The Framework')
-#     }
-# )
-#
-# languages = []
-# python = Language(language='Python', framework='Flask')
-# languages.append(python)
-#
-#
-# @api.route('/')
-# class LanguagesResource(Resource):
-#     """Manage all the languages!"""
-#
-#     def get(self):
-#         """Get the list of languages."""
-#         schema = LanguageSchema(many=True)
-#         return schema.dump(languages)
-#
-#     @api.expect(a_language)
-#     # @api.doc('create_language')
-#     def post(self):
-#         """Add a language."""
-#         language = api.payload
-#         language['id'] = len(languages) + 1
-#         languages.append(language)
-#         return {'result': 'Language added'}, 201
-#
-#
-# # @api.route('/<string:id_>')
-# # @api.response(404, 'Not found.')
-# # @api.param('id_', "the language's identifier")
-# # class LanguageResource(Resource):
-# #     """Manage individual languages."""
-# #
-# #     @api.doc('get_language')
-# #     @api.marshal_with(LanguageModel)
-# #     def get(self, id_):
-# #         """Get a language."""
-# #         # Query and get the response.
-# #         res = self.es.search(
-# #             index="languages",
-# #             body={
-# #                 "query": {
-# #                     "match": {
-# #                         '_id': id_
-# #                     }
-# #                 }
-# #             }
-# #         )
-# #         # Get the hits from the response.
-# #         hits = res['hits']['hits']
-# #         # If there were no matches...
-# #         if not hits:
-# #             return '', 404  # ...it's a 404.
-# #         # Get the first hit.
-# #         hit = hits[0]
-# #         # Format it and return it.
-# #         return {
-# #             'id_': hit['_id'],
-# #             **hit['_source']
-# #         }
-# #
-# #     @api.doc('delete_language')
-# #     def delete(self, id_):
-# #         """Delete a language."""
-# #         try:
-# #             self.es.delete(
-# #                 index='languages',
-# #                 doc_type='language',
-# #                 id=id_
-# #             )
-# #         except NotFoundError:
-# #             return '', 404
-# #         return response(
-# #             status=JSendStatus.SUCCESS,
-# #             message='The language was deleted.',
-# #             code=204
-# #         )
-# #
-# #     @api.doc('update_language')
-# #     @api.expect(LanguageModel)
-# #     def put(self, id_):
-# #         """Update a language."""
-# #         # Index the document.
-# #         try:
-# #             self.es.update(
-# #                 index='languages',
-# #                 doc_type='language',
-# #                 id=id_,
-# #                 body={"doc": api.payload})
-# #         except NotFoundError:
-# #             return '', 404
-# #         # Hooray!
-# #         return response(
-# #             status=JSendStatus.SUCCESS,
-# #             message='The language was updated.',
-# #             code=202
-# #         )
+@api.route('/<string:id_>')
+@api.response(404, 'Not found.')
+@api.param('id_', "the language's identifier")
+class LanguageIdResource(Resource, ElastalkMixin):
+    """Manage individual languages."""
+
+    @api.doc('get_language')
+    @api.marshal_with(LanguageModel)
+    def get(self, id_):
+        """Get a language."""
+        result = self.es.search(
+            index='languages',
+            body={
+                "query": {
+                    "match": {
+                        '_id': id_
+                    }
+                }
+            }
+        )
+        try:
+            for hit in extract_hits(result):
+                return hit
+        except IndexError:
+            return '', 404
+
+    @api.doc('delete_language')
+    def delete(self, id_):
+        """Delete a language."""
+        try:
+            self.es.delete(
+                index='languages',
+                doc_type='language',
+                id=id_
+            )
+        except NotFoundError:
+            return '', 404
+        return response(
+            status=JSendStatus.SUCCESS,
+            message='The language was deleted.',
+            code=200
+        )
+
+    @api.doc('update_language')
+    @api.expect(LanguageModel)
+    def put(self, id_):
+        """Update a language."""
+        # Index the document.
+        try:
+            self.es.update(
+                index='languages',
+                doc_type='language',
+                id=id_,
+                body={"doc": api.payload})
+        except NotFoundError:
+            return '', 404
+        # Hooray!
+        return response(
+            status=JSendStatus.SUCCESS,
+            message='The language was updated.',
+            code=202
+        )
